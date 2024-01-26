@@ -5,15 +5,34 @@ import { styles } from "./styles"
 
 import { Input } from "@/components/Input"
 
+import {cpfApplyMask, cnpjApplyMask} from "@/utils/masks"
+
 export function Home() {
   const [pix, setPix] = useState("")
+
+  function ApplyMask(input:String){
+    const onlyNumbers = input.replace(/\D/g, "")//remove caracter não nunéricos
+
+    if (onlyNumbers.length === 11) {
+      const cpf = cpfApplyMask(onlyNumbers)
+      return setPix(cpf)
+    }
+
+    if (onlyNumbers.length === 14) {
+      const cnpj = cnpjApplyMask(onlyNumbers)
+      return setPix(cnpj)
+    }
+
+    const nameOrPixKey = input.replace(/[^a-zA-Z0-9 ]/g, "")
+    setPix(nameOrPixKey)
+  }
 
   return (
     <View style={styles.container}>
       <Input.Container>
         <Input.Field
           placeholder="Nome, CPF/CNPJ ou chave Pix"
-          onChangeText={setPix}
+          onChangeText={ApplyMask}
           value={pix}
         />
 
